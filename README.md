@@ -25,3 +25,8 @@ Name and description for a group of scenarios.
 
 ## Scenario
 A test scenario for a feature
+
+# Todo
+* Add configuration for header and footer in generated pdf documents
+* Add support for multiple .net frameworks
+* Add html output generators
