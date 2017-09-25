@@ -299,3 +299,5 @@ __pycache__/
 /SBE._NUnit.Tests.details.sbe.xml
 /SBE._NUnit.Tests.summary.sbe.json
 /NDependOut
+/CodeCoverageReport
+/results.xml

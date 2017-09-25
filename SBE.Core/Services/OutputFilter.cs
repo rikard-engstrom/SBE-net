@@ -2,7 +2,7 @@
 
 namespace SBE.Core.Services
 {
-    sealed class OutputFilter
+    internal sealed class OutputFilter
     {
         enum Filter
         {
