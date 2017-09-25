@@ -29,27 +29,13 @@ namespace SBE.Core.OutputGenerators.Html
 
         internal static void WriteRows(DataTable table, StringBuilder sb)
         {
-            var rows = table.Rows.Skip(1).Select(row => row.Cells.Select(cell => WebUtility.HtmlEncode(cell.Value)).ToArray()).ToArray();
+            var rows = table.Rows.Skip(1).Select(row => row.Cells.Select(cell => WebUtility.HtmlEncode(cell.Value).ForceSpaceIfEmpty()).ToArray()).ToArray();
 
             sb.AppendLine("<tbody>");
             foreach (var row in rows)
             {
-                sb.Append("<tr>");
-                foreach (var cell in row)
-                {
-                    if (string.IsNullOrWhiteSpace(cell))
-                    {
-                        sb.Append($"<td>&nbsp;</td>");
-                    }
-                    else
-                    {
-                        sb.Append($"<td>{cell}</td>");
-                    }
-                }
-
-                sb.AppendLine("</tr>");
+                sb.Append($"<tr>{row.Select(cell => $"<td>{cell}</td>")}</tr>");
             }
-
             sb.AppendLine("</tbody>");
         }
 
@@ -68,6 +54,11 @@ namespace SBE.Core.OutputGenerators.Html
             }
 
             sb.AppendLine("</tr></thead>");
+        }
+
+        internal static string ForceSpaceIfEmpty(this string text)
+        {
+            return string.IsNullOrWhiteSpace(text) ? "&nbsp;" : text;
         }
     }
 }

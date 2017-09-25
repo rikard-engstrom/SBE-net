@@ -148,27 +148,20 @@ namespace SBE.Core.OutputGenerators.Html
         private void ScenarioHtml(ScenarioDefinition scenario, StringBuilder sb, ICollection<SbeScenario> results)
         {
             var result = results.FirstOrDefault(x => x.Title == scenario.Name)?.Outcome ?? Outcome.Inconclusive;
-
             var outline = scenario as ScenarioOutline;
             var examples = outline?.Examples.Select(ExtendedExamples.Create).ToArray();
-            examples?.ToList().ForEach(x => ExtendedExamples.MatchResult(x, scenario, results));
 
             if (outline != null)
             {
+                examples?.ToList().ForEach(x => ExtendedExamples.MatchResult(x, scenario, results));
                 result = GetOutlineResultFromExamples(examples);
             }
 
             sb.AppendLine("<div class=\"scenario\">");
             sb.AppendLine($"<table class=\"title\"><tr><td>{GenerateStatusImageTag(result)}</td><td class=\"text\">{scenario.Keyword}: {HtmlEncode(scenario.Name)}</td></tr></table>");
             sb.AppendLine($"<p>{AddLineBreaks(HtmlEncode(scenario.Description))}</p>");
-
             StepsHtml(sb, scenario.Steps);
-
-            if (outline != null)
-            {
-                ExamplesHtml(sb, examples);
-            }
-
+            ExamplesHtml(sb, examples);
             sb.AppendLine("</div>");
         }
 
@@ -232,7 +225,7 @@ namespace SBE.Core.OutputGenerators.Html
 
         private void ExamplesHtml(StringBuilder sb, ExtendedExamples[] examples)
         {
-            foreach (var example in examples)
+            foreach (var example in examples ?? new ExtendedExamples[0])
             {
                 sb.AppendLine("<div class=\"example\">");
                 sb.AppendLine($"{example.Keyword}:");
@@ -253,14 +246,7 @@ namespace SBE.Core.OutputGenerators.Html
 
                 foreach (var cell in row.Values)
                 {
-                    if (string.IsNullOrWhiteSpace(cell))
-                    {
-                        sb.Append($"<td>&nbsp;</td>");
-                    }
-                    else
-                    {
-                        sb.Append($"<td>{cell}</td>");
-                    }
+                    sb.Append($"<td>{cell.ForceSpaceIfEmpty()}</td>");
                 }
 
                 sb.AppendLine("</tr>");

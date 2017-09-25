@@ -125,24 +125,30 @@ namespace SBE.Core.Services
 
         private string GetHtmlForFeatures(SbeEpic[] epics)
         {
-            var sb = new StringBuilder();
-            bool first = true;
+            var features = GetFilteredFeatures(epics);
 
-            var features = epics.SelectMany(e => e.GetFeatures())
-                                    .Where(f => filter?.IncludeFeature(f) ?? true)
-                                    .ToArray();
-            foreach (var feature in features)
+            if (!features.Any())
             {
-                if (!first)
-                {
-                    sb.AppendLine("<div style=\"page-break-before:always;\"></div>");
-                }
+                return string.Empty;
+            }
 
+            var sb = new StringBuilder();
+            sb.Append(gherkinHtmlService.FeatureHtml(features.First()));
+
+            foreach (var feature in features.Skip(1))
+            {
+                sb.AppendLine("<div style=\"page-break-before:always;\"></div>");
                 sb.Append(gherkinHtmlService.FeatureHtml(feature));
-                first = false;
             }
 
             return sb.ToString();
+        }
+
+        private SbeFeature[] GetFilteredFeatures(SbeEpic[] epics)
+        {
+            return epics.SelectMany(e => e.GetFeatures())
+                                    .Where(f => filter?.IncludeFeature(f) ?? true)
+                                    .ToArray();
         }
     }
 }
