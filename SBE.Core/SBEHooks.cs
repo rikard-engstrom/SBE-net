@@ -5,9 +5,9 @@ using SBE.Core.Utils;
 
 namespace SBE.Core
 {
-    public static class TestRegistration
+    public static class SBEHooks
     {
-        public static void TestOutcome(ITestOutcomeEvent e)
+        public static void AfterScenario(ITestOutcomeEvent e)
         {
             var specflowContext = SpecflowContextWrapper.Create();
             var scenario = ScenarioService.GetScenario(e, specflowContext);
@@ -16,11 +16,11 @@ namespace SBE.Core
 
         public static void AfterTestRun()
         {
-            FileHelper.SourcePath = SbeConfiguration.SourcePath;
-            FeatureService.SetFeatureTexts(SbeConfiguration.SourcePath);
+            FileHelper.SourcePath = SBEConfiguration.SourcePath;
+            FeatureService.SetFeatureTexts(SBEConfiguration.SourcePath);
             var assemblies = FeatureService.GetAllAssemblies();
 
-            foreach (var generator in SbeConfiguration.Generators)
+            foreach (var generator in SBEConfiguration.Generators)
             {
                 generator.Generate(assemblies);
             }

@@ -81,7 +81,7 @@
     <Compile Include="OutputGenerators\JsonSummaryGenerator.cs" />
     <Compile Include="Models\Outcome.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestRegistration.cs" />
+    <Compile Include="SBEHooks.cs" />
     <Compile Include="Models\ITestOutcomeEvent.cs" />
   </ItemGroup>
   <ItemGroup>

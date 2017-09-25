@@ -9,13 +9,13 @@ namespace SBE._NUnit
         [AfterScenario]
         public void AfterScenario()
         {
-            TestRegistration.TestOutcome(NUnitEventService.CreateAfterScenarioEvent());
+            SBEHooks.AfterScenario(NUnitEventService.CreateAfterScenarioEvent());
         }
 
         [AfterTestRun]
         public static void AfterTestRun()
         {
-            TestRegistration.AfterTestRun();
+            SBEHooks.AfterTestRun();
         }
     }
 }

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace SBE.Core
 {
-    public static class SbeConfiguration
+    public static class SBEConfiguration
     {
         public static string SourcePath { get; set; }
 
         public static List<IOutputGenerator> Generators { get; private set; }
 
-        static SbeConfiguration()
+        static SBEConfiguration()
         {
             Generators = new List<IOutputGenerator>
             {

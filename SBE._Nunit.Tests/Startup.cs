@@ -2,6 +2,7 @@
 using SBE.Core;
 using System;
 using System.IO;
+using System.Reflection;
 
 namespace SBE._NUnit.Tests
 {
@@ -11,7 +12,7 @@ namespace SBE._NUnit.Tests
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            SbeConfiguration.SourcePath = GetSourcePath();
+            SBEConfiguration.SourcePath = GetSourcePath();
         }
 
         private static string GetSourcePath()
@@ -19,9 +20,8 @@ namespace SBE._NUnit.Tests
             var outputDirectoryPathBuildResult = Environment.GetEnvironmentVariable("BUILD_SOURCESDIRECTORY");
             if (string.IsNullOrEmpty(outputDirectoryPathBuildResult))
             {
-                var uriCurrentExecutingAssembly = System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase;
-                var absolutePathCurrentExecutingAssembly =
-                    Path.GetDirectoryName(new Uri(uriCurrentExecutingAssembly).AbsolutePath);
+                var uriCurrentExecutingAssembly = Assembly.GetExecutingAssembly().GetName().CodeBase;
+                var absolutePathCurrentExecutingAssembly = Path.GetDirectoryName(new Uri(uriCurrentExecutingAssembly).AbsolutePath);
                 outputDirectoryPathBuildResult = GetPathParentDirectory(absolutePathCurrentExecutingAssembly, 3);
             }
 
