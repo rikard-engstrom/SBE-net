@@ -24,22 +24,9 @@ namespace SBE.Core.Services
 
         internal bool IncludeFeature(SbeFeature feature)
         {
-            if (filter == Filter.All)
-            {
-                return true;
-            }
-
-            if (filter == Filter.CurrentIteration && feature.IsCurrentIteration())
-            {
-                return true;
-            }
-
-            if (filter == Filter.AllImplemented && feature.IsImplemented())
-            {
-                return true;
-            }
-
-            return false;
+            return filter == Filter.All ||
+                    filter == Filter.CurrentIteration && feature.IsCurrentIteration() ||
+                    filter == Filter.AllImplemented && feature.IsImplemented();
         }
     }
 }

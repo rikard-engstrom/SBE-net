@@ -20,27 +20,33 @@ namespace SBE.Core.OutputGenerators
         {
             foreach (var assembly in assemblies)
             {
-                var outputModel = new
-                {
-                    epics = assembly.GetEpics()
-                                .Select(e => new
-                                {
-                                    e.Name,
-                                    Features = e.GetFeatures()
-                                        .Select(x => new
-                                        {
-                                            x.Title,
-                                            x.Tags,
-                                            Success = x.Success(),
-                                            Scenarios = x.Scenarios.Select(s => new { s.Title, Success = s.Success(), Outcome = s.Outcome.ToString(), s.Tags })
-                                        })
-                                })
-                };
-
-                var json = JsonConvert.SerializeObject(outputModel, Formatting.Indented);
+                string json = GetJson(assembly);
                 var file = FileHelper.GetOutputFileName("summary", "json", assembly.Name);
                 writer(file, json);
             }
+        }
+
+        private static string GetJson(SbeAssembly assembly)
+        {
+            var outputModel = new
+            {
+                epics = assembly.GetEpics()
+                            .Select(e => new
+                            {
+                                e.Name,
+                                Features = e.GetFeatures()
+                                    .Select(x => new
+                                    {
+                                        x.Title,
+                                        x.Tags,
+                                        Success = x.Success(),
+                                        Scenarios = x.Scenarios.Select(s => new { s.Title, Success = s.Success(), Outcome = s.Outcome.ToString(), s.Tags })
+                                    })
+                            })
+            };
+
+            var json = JsonConvert.SerializeObject(outputModel, Formatting.Indented);
+            return json;
         }
     }
 }

@@ -7,22 +7,37 @@ namespace SBE.Core.Models
     {
         internal static Outcome CombineOutcomes(IEnumerable<Outcome> outcomes)
         {
-            if (outcomes.Any(x => x == Outcome.Failed))
+            if (outcomes.AnyFailed())
             {
                 return Outcome.Failed;
             }
-            else if (outcomes.All(x => x == Outcome.Passed))
+
+            if (outcomes.AllPassed())
             {
                 return Outcome.Passed;
             }
-            else if (outcomes.Any(x => x == Outcome.Passed))
+
+            if (outcomes.AnyPassed())
             {
                 return Outcome.PartlyPassed;
             }
-            else
-            {
-                return Outcome.Inconclusive;
-            }
+
+            return Outcome.Inconclusive;
+        }
+
+        private static bool AnyFailed(this IEnumerable<Outcome> outcomes)
+        {
+            return outcomes.Any(x => x == Outcome.Failed);
+        }
+
+        private static bool AllPassed(this IEnumerable<Outcome> outcomes)
+        {
+            return outcomes.All(x => x == Outcome.Passed);
+        }
+
+        private static bool AnyPassed(this IEnumerable<Outcome> outcomes)
+        {
+            return outcomes.Any(x => x == Outcome.Passed);
         }
     }
 }
