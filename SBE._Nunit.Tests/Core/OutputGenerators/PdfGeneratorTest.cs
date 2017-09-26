@@ -35,7 +35,7 @@ Scenario: Add two numbers for implemented calculator
             string outputFileName = null;
             byte[] outputContent = null;
 
-            var generator = new  PdfGenerator("testing", OutputFilter.All, (file, bytes) => { outputFileName = file; outputContent = bytes; });
+            var generator = new PdfGenerator("testing", OutputFilter.All, (file, bytes) => { outputFileName = file; outputContent = bytes; });
             generator.Generate(collectedTests);
 
             Assert.That(outputFileName, Is.EqualTo("\\some.strange.assembly.testing.sbe.pdf"), "FileName");

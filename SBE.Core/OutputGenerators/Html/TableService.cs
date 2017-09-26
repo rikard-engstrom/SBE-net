@@ -36,6 +36,7 @@ namespace SBE.Core.OutputGenerators.Html
             {
                 sb.Append($"<tr>{row.Select(cell => $"<td>{cell}</td>")}</tr>");
             }
+
             sb.AppendLine("</tbody>");
         }
 
