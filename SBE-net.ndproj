@@ -13,8 +13,10 @@
     <Name>TechTalk.SpecFlow</Name>
     <Name>System.Core</Name>
     <Name>Newtonsoft.Json</Name>
-    <Name>nunit.framework</Name>
     <Name>System</Name>
+    <Name>itextsharp</Name>
+    <Name>itextsharp.xmlworker</Name>
+    <Name>nunit.framework</Name>
   </FrameworkAssemblies>
   <Dirs>
     <Dir>C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319</Dir>
@@ -22,9 +24,11 @@
     <Dir>C:\rikeng\SBE-net\SBE.Core\bin\Debug</Dir>
     <Dir>C:\rikeng\SBE-net\SBE.NUnit\bin\Debug</Dir>
     <Dir>C:\rikeng\SBE-net\SBE.Tests.NUnit\bin\Debug</Dir>
+    <Dir>C:\rikeng\SBE-net\SBE._NUnit\bin\Debug</Dir>
+    <Dir>C:\rikeng\SBE-net\SBE._Nunit.Tests\bin\Debug</Dir>
   </Dirs>
   <MergeCodeGeneratedByCompiler>True</MergeCodeGeneratedByCompiler>
-  <Report Kind="0" SectionsEnabled="110591" XslPath="" Flags="261376" />
+  <Report Kind="0" SectionsEnabled="110591" XslPath="" Flags="261120" />
   <BuildComparisonSetting ProjectMode="CurrentProject" BuildMode="NDaysAgoAnalysisResult" ProjectFileToCompareWith="" BuildFileToCompareWith="" NDaysAgo="30" />
   <BaselineInUISetting ProjectMode="CurrentProject" BuildMode="NDaysAgoAnalysisResult" ProjectFileToCompareWith="" BuildFileToCompareWith="" NDaysAgo="30" />
   <CoverageFiles CoverageDir="" UncoverableAttribute="" />
@@ -2304,7 +2308,10 @@ where  t.IsClass &&
       
       // Serialized type might never be seen as instantiated.
       !t.HasAttribute("System.Runtime.Serialization.DataContractAttribute".AllowNoMatch()) &&
-      !t.IsUsing("System.Runtime.Serialization.DataMemberAttribute".AllowNoMatch())
+      !t.IsUsing("System.Runtime.Serialization.DataMemberAttribute".AllowNoMatch()) 
+      && !t.HasAttribute("NUnit.Framework.SetUpFixtureAttribute") //Custom: Test framework
+      && !t.HasAttribute("NUnit.Framework.TestFixtureAttribute") //Custom: Test classes can't be static
+      && !t.HasAttribute("TechTalk.SpecFlow.BindingAttribute") //Custom: Specflow steps can't be static
  
 // find the first constructor of t called
 let ctorCalled = t.Constructors.FirstOrDefault(ctor => ctor.NbMethodsCallingMe > 0)
@@ -2360,6 +2367,11 @@ let methodsThatCanBeMadeStatic =
    // any of its class or base classes instance fields or instance methods.
    where !m.IsAbstract && !m.IsVirtual &&
          !m.AccessThis && !m.IsExplicitInterfaceImpl &&
+!m.HasAttribute("TechTalk.SpecFlow.AfterScenarioAttribute") && //Custom: Specflow hooks cannot be static
+!m.HasAttribute("TechTalk.SpecFlow.GivenAttribute") && //Custom: Specflow steps cannot be static
+!m.HasAttribute("TechTalk.SpecFlow.WhenAttribute") && //Custom: Specflow steps cannot be static
+!m.HasAttribute("TechTalk.SpecFlow.ThenAttribute") && //Custom: Specflow steps cannot be static
+!m.HasAttribute("NUnit.Framework.OneTimeSetUpAttribute") && //Custom: OneTimeSetup cannot be static
 
           // Optimization: Using FirstOrDefault() avoid to check all members, 
           //               as soon as one member is found
@@ -5337,8 +5349,10 @@ let canTypeBeConsideredAsDeadProc = new Func<IType, bool>(
 
          // Exclude static types that define only const fields
          // because they cannot be seen as used in IL code.
-        !(t.IsStatic && t.NbMethods == 0 && !t.Fields.Where(f => !f.IsLiteral).Any()))
-
+        !(t.IsStatic && t.NbMethods == 0 && !t.Fields.Where(f => !f.IsLiteral).Any()) &&
+        !t.HasAttribute("NUnit.Framework.SetUpFixtureAttribute") && //Custom: Required by test framework
+        !t.HasAttribute("TechTalk.SpecFlow.BindingAttribute") //Custom: Specflow steps are executed from external dll
+)
 // Select types unused
 let typesUnused = 
    from t in JustMyCode.Types where
@@ -5427,6 +5441,12 @@ let canMethodBeConsideredAsDeadProc = new Func<IMethod, bool>(
          // Methods tagged with these two attributes are called by the serialization infrastructure.
          !m.HasAttribute("System.Runtime.Serialization.OnSerializingAttribute".AllowNoMatch()) &&
          !m.HasAttribute("System.Runtime.Serialization.OnDeserializedAttribute".AllowNoMatch()) &&
+         !m.HasAttribute("NUnit.Framework.OneTimeSetUpAttribute") && //Custom: Required by test framework
+         !m.HasAttribute("TechTalk.SpecFlow.GivenAttribute") && //Custom: Specflow steps are executed from external dll
+         !m.HasAttribute("TechTalk.SpecFlow.WhenAttribute") && //Custom: Specflow steps are executed from external dll
+         !m.HasAttribute("TechTalk.SpecFlow.ThenAttribute") && //Custom: Specflow steps are executed from external dll
+         (m.Name == ".ctor()" && !m.ParentType.HasAttribute("NUnit.Framework.SetUpFixtureAttribute")) && //Custom: SetUpFixture
+         (m.Name == ".ctor()" && !m.ParentType.HasAttribute("TechTalk.SpecFlow.BindingAttribute")) &&
 
          // If you don't want to link NDepend.API.dll, you can use your own IsNotDeadCodeAttribute 
          // and adapt the source code of this rule.
@@ -5657,7 +5677,8 @@ warnif count > 0 from m in JustMyCode.Methods where
   !( m.IsConstructor && m.IsPublic && m.NbParameters == 0) &&
 
   // Don't decrease the visibility of Main() methods.
-  !m.IsEntryPoint
+  !m.IsEntryPoint &&
+  !m.ParentType.HasAttribute("NUnit.Framework.SetUpFixtureAttribute") //Custom: Required by test framework
 
 select new { 
    m, 
@@ -6022,8 +6043,8 @@ from m in JustMyCode.Methods where
    // Eliminate operators that must be declared public
    !m.IsOperator &&
    // Eliminate methods generated by compiler
-   !m.IsGeneratedByCompiler 
-
+   !m.IsGeneratedByCompiler &&
+   !m.ParentType.HasAttribute("NUnit.Framework.SetUpFixtureAttribute") //Custom: Required by test framework
 let calledOutsideParentType = 
     m.MethodsCallingMe.FirstOrDefault(mCaller => mCaller.ParentType != m.ParentType) != null
 
