@@ -4,7 +4,7 @@ using SBE.Core.Models;
 
 namespace SBE._NUnit
 {
-    internal partial class NUnitEventService
+    internal static class NUnitEventService
     {
         internal static ITestOutcomeEvent CreateAfterScenarioEvent()
         {

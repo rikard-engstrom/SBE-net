@@ -301,3 +301,7 @@ __pycache__/
 /NDependOut
 /CodeCoverageReport
 /results.xml
+/SBE._NUnit.Tests.summary.sbe.xml
+/SBE._NUnit.Tests.current.sbe.pdf
+/SBE._NUnit.Tests.all.sbe.pdf
+/SBE._NUnit.Tests.all-implemented.sbe.pdf

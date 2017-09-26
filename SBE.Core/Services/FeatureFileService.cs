@@ -12,8 +12,8 @@ namespace SBE.Core.Services
         {
             sealed class ParsedFeature
             {
-                public string Title { get; internal set; }
-                public string Content { get; internal set; }
+                internal string Title { get; set; }
+                internal string Content { get; set; }
             }
 
             internal static void SetFeatureTexts(string sourcePath, SbeFeature[] features)

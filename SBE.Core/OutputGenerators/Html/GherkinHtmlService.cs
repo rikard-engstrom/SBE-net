@@ -16,9 +16,9 @@ namespace SBE.Core.OutputGenerators.Html
 
         private sealed class ExtendedExamples
         {
-            public string Keyword { get; private set; }
-            public string[] Headers { get; private set; }
-            public ExtendedTableRow[] Rows { get; private set; }
+            internal string Keyword { get; private set; }
+            internal string[] Headers { get; private set; }
+            internal ExtendedTableRow[] Rows { get; private set; }
 
             internal static ExtendedExamples Create(Examples examples)
             {
@@ -46,9 +46,9 @@ namespace SBE.Core.OutputGenerators.Html
 
         private sealed class ExtendedTableRow
         {
-            public string[] Values { get; private set; }
-            public string[] Headers { get; private set; }
-            public Outcome Result { get; internal set; }
+            internal string[] Values { get; private set; }
+            private string[] Headers { get; set; }
+            internal Outcome Result { get; set; }
 
             internal static ExtendedTableRow Create(TableRow row, string[] headers)
             {
@@ -94,7 +94,7 @@ namespace SBE.Core.OutputGenerators.Html
             }
         }
 
-        internal string FeatureHtml(GherkinDocument document, SbeFeature feature)
+        private string FeatureHtml(GherkinDocument document, SbeFeature feature)
         {
             var sb = new StringBuilder();
 

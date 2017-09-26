@@ -1,6 +1,6 @@
 ﻿using TechTalk.SpecFlow;
 
-namespace SBE._NUnit.Samples
+namespace SBE._NUnit.Tests.Samples
 {
     [Binding, Scope(Feature = "Sample of a not implemented feature")]
     sealed class SampleSteps

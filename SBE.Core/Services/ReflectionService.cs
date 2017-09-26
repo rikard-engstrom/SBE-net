@@ -10,8 +10,8 @@ namespace SBE.Core.Services
     {
         sealed class TestMethodInfo
         {
-            public string AssemblyName { get; internal set; }
-            public KeyValuePair<string, string>[] NamedArgumets { get; internal set; }
+            internal string AssemblyName { get; set; }
+            internal KeyValuePair<string, string>[] NamedArgumets { get; set; }
         }
 
         static class ReflectionService

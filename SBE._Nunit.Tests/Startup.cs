@@ -13,6 +13,13 @@ namespace SBE._NUnit.Tests
         public void OneTimeSetUp()
         {
             SBEConfiguration.SourcePath = GetSourcePath();
+            SBEConfiguration.Generators.Clear();
+            SBEConfiguration.Generators.Add(SBEConfiguration.DefaultGenerators.JsonSummary);
+            SBEConfiguration.Generators.Add(SBEConfiguration.DefaultGenerators.PdfAll);
+            SBEConfiguration.Generators.Add(SBEConfiguration.DefaultGenerators.PdfAllImplemented);
+            SBEConfiguration.Generators.Add(SBEConfiguration.DefaultGenerators.PdfCurrent);
+            SBEConfiguration.Generators.Add(SBEConfiguration.DefaultGenerators.XmlDetail);
+            SBEConfiguration.Generators.Add(SBEConfiguration.DefaultGenerators.XmlSummary);
         }
 
         private static string GetSourcePath()

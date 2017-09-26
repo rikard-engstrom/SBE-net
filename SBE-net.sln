@@ -12,7 +12,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SBE.Core", "SBE.Core\SBE.Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SBE._NUnit", "SBE._NUnit\SBE._NUnit.csproj", "{E68F658A-1051-4DBA-8322-76B55CB22FA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SBE._NUnit.Tests", "SBE._Nunit.Tests\SBE._NUnit.Tests.csproj", "{5D6B6711-4D1F-479A-B7E7-4AEDD938F33A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SBE._NUnit.Tests", "SBE._NUnit.Tests\SBE._NUnit.Tests.csproj", "{5D6B6711-4D1F-479A-B7E7-4AEDD938F33A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

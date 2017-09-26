@@ -2,6 +2,7 @@
 
 namespace SBE._NUnit.Tests.Samples
 {
+    [Binding, Scope(Feature = "Name your arguments")]
     sealed class ArgumentsSteps
     {
         [Given(@"I have entered (.*) into the calculator")]

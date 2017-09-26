@@ -5,10 +5,10 @@ namespace SBE.Core.Services
 {
     sealed class SpecflowContextWrapper
     {
-        internal string FeatureTitle { get; set; }
-        internal string[] FeatureTags { get; set; }
-        internal string ScenarioTitle { get; set; }
-        internal string[] ScenarioTags { get; set; }
+        internal string FeatureTitle { get; private set; }
+        internal string[] FeatureTags { get; private set; }
+        internal string ScenarioTitle { get; private set; }
+        internal string[] ScenarioTags { get; private set; }
 
         internal static SpecflowContextWrapper Create()
         {
